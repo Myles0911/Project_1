@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Complaint Viewer</title>
+</head>
+<body>
+    <nav><a href="ishgard-complaint-registration.html">Register Complaint</a></nav>
+    <h1>Ishgard Complaint Viewer!!</h1>
+
+    <table>
+        <thead>
+            <tr><th>Complaint_ID</th><th>Description</th><th>Status</th><th>Meeting_ID</th></tr>
+        </thead>
+            <tbody id="complaintTableBody">
+            </tbody>
+
+    </table>
+    
+</body>
+<script>
+const complaintTableBody = document.getElementById("complaintTableBody");
+
+async function getComplaints(){
+    const httpResponse = await fetch("http://localhost:8080/complaints");
+    const complaints = await httpResponse.json();
+    return complaints;
+}
+
+async function renderComplaintTable() {
+    const testComplaints = await getComplaints();
+
+
+    for(const complaints of testComplaints) {
+        const complaintRow = document.createElement("tr");
+
+        const complaintIdData = document.createElement("td");
+        complaintIdData.innerText = complaints.id;
+
+        const complaintDescriptionData = document.createElement("td");
+        complaintDescriptionData.innerText = complaints.description;
+
+        const complaintStatusData = document.createElement("td");
+        complaintStatusData.innerText = complaints.status;
+
+        const complaintMeetingData = document.createElement("td");
+        complaintMeetingData.innerText = complaints.meeting_id;
+
+        complaintRow.appendChild(complaintIdData);
+        complaintRow.appendChild(complaintDescriptionData);
+        complaintRow.appendChild(complaintStatusData);
+        complaintRow.appendChild(complaintMeetingData);
+
+        complaintTableBody.appendChild(complaintRow);
+
+    }
+}
+
+renderComplaintTable();
+
+
+
+
+</script>
+</html>

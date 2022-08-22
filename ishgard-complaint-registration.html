@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   
+    
+    <title>Ishgard Register</title>
+</head>
+<body>
+    <nav><a href="ishgard-complaint-viewer.html">View Complaints</a></nav>
+
+    <h1>Ishgard Register</h1>
+
+    <form>
+        <fieldset>
+            <legend>Register Complaint</legend>
+            <label for="inputComplaint">Complaint</label>
+            <input id="inputComplaint" type="text" placeholder="Let us rebuild the Holy See" required minlength="3" maxlength="100"/>
+    
+
+
+           
+
+        </fieldset>
+        <button>Submit</button>
+
+    </form>
+</body>
+<Script> 
+const inputComplaint = document.getElementById("inputComplaint");
+
+document.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const description = inputComplaint.value;
+    const complaint = {id:0, description, status, meeting_id:-1}
+
+    const response = await fetch("http://localhost:8080/complaints", {
+        method:"POST",
+        body:JSON.stringify(complaint),
+        headers: {
+            "Content-Type":"application/json"
+        }
+    
+});
+
+if(response.status === 201) {
+    alert("Successfully filed a complaint");
+    inputComplaint= "";
+
+} else{
+    alert("Sorry, something went wront, please input complaint again");
+}
+});
+
+
+</Script>
+
+</html>
