@@ -5,8 +5,13 @@
     
     <title>Ishgard Register</title>
 </head>
-<body>
+<body background="https://getwallpapers.com/wallpaper/full/c/6/7/598963.jpg">
     <nav><a href="ishgard-complaint-viewer.html">View Complaints</a></nav>
+    <nav> <a href="meetings-viewer.html"> View Meetings</a></nav>
+    <nav><a href="ishgard-complaint-viewer.html">View Complaints</a>
+    <nav><a href="councilor.html">Councilor</a></nav>
+    <nav><a href="ishgardian-viewUsers.html"> View Registered Users</a></nav>
+    <nav><a href="ishgardian-user-registration.html">View Users</a></nav>
 
     <h1>Ishgard Register</h1>
 
@@ -15,8 +20,13 @@
             <legend>Register Complaint</legend>
             <label for="inputComplaint">Complaint</label>
             <input id="inputComplaint" type="text" placeholder="Let us rebuild the Holy See" required minlength="3" maxlength="100"/>
-    
 
+            <label for="inputStatus">Status</label>
+            <input id="inputStatus" type="text" placeholder="Status of Complaint" required minlength="3" maxlength="100"/>
+
+   
+    
+            
 
            
 
@@ -27,11 +37,19 @@
 </body>
 <Script> 
 const inputComplaint = document.getElementById("inputComplaint");
+const inputStatus = document.getElementById("inputStatus");
+
+
+
+
+
+console.log(localStorage.getItem("ishgard"));
 
 document.addEventListener("submit", async event => {
     event.preventDefault();
 
     const description = inputComplaint.value;
+    const status = inputStatus.value;
     const complaint = {id:0, description, status, meeting_id:-1}
 
     const response = await fetch("http://localhost:8080/complaints", {
@@ -43,9 +61,13 @@ document.addEventListener("submit", async event => {
     
 });
 
+
+
+
 if(response.status === 201) {
     alert("Successfully filed a complaint");
-    inputComplaint= "";
+    inputComplaint.value= "";
+    inputStatus.value="";
 
 } else{
     alert("Sorry, something went wront, please input complaint again");

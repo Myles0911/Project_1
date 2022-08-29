@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   
+    <title>User Registry</title>
+    
+</head>
+<body background="https://getwallpapers.com/wallpaper/full/c/6/7/598963.jpg">
+    <nav> <a href="meetings-viewer.html"> View Meetings</a></nav>
+    <nav><a href="ishgard-complaint-registration.html">Register Complaint</a></nav>
+    <nav><a href="ishgard-complaint-viewer.html">View Complaints</a>
+    <nav><a href="councilor.html">Councilor</a></nav>
+    <nav><a href="ishgardian-viewUsers.html"> View Registered Users</a></nav>
+  
+ 
+    <h1>Ishgardian Users Registry</h1>
+    <form>
+        <fieldset>
+            <legend>Register new user</legend>
+            <label for="inputName">Name</label>
+            <input id="inputName" type="text" placeholder="Enter your name">
+
+            <label for="inputPassword">Password</label>
+            <input id="inputPassword" type="text" placeholder="Please enter your password">
+
+            <label for="inputRole">Role</label>
+            <input id="inputRole" type="text" placeholder="State your role">
+
+
+        </fieldset>
+        <button>Submit</button>
+
+
+    </form>
+</body>
+<script>
+    const inputName = document.getElementById("inputName");
+    const inputPassword = document.getElementById("inputPassword");
+    const inputRole = document.getElementById("inputRole")
+    console.log(localStorage.getItem("ishgard"));
+
+    document.addEventListener("submit", async event => {
+    event.preventDefault();
+        const name = inputName.value;
+        const password = inputPassword.value;
+        const role = inputRole.value;
+        const ishgardian = {id:0, name, password, role}
+
+        const response = await fetch("http://localhost:8080/ishgardians", {
+        method:"POST",
+        body:JSON.stringify(ishgardian),
+        headers: {
+            "Content-Type":"application/json"
+        }
+    
+});
+if(response.status === 201) {
+    alert("Successfully registered a new user");
+    inputName= "";
+    inputPassword="";
+    inputRole="";
+
+} else{
+    alert("Sorry, something went wrong, please enter user info again");
+}
+    });
+
+</script>
+</html>

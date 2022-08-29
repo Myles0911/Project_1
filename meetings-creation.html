@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   
+    <title>Meeting Creation</title>
+</head>
+<body background="https://getwallpapers.com/wallpaper/full/c/6/7/598963.jpg">
+    <nav> <a href="meetings-viewer.html"> View Meetings</a></nav>
+    <nav><a href="ishgard-complaint-registration.html">Register Complaint</a></nav>
+    <nav><a href="ishgard-complaint-viewer.html">View Complaints</a>
+    <nav><a href="councilor.html">Councilor</a></nav>
+    <nav><a href="ishgardian-viewUsers.html"> View Registered Users</a></nav>
+    <nav><a href="ishgardian-user-registration.html">View Users</a></nav>
+
+    <h1>Create Meetings</h1>
+
+    <form>
+        <fieldset>
+            <legend>Create new Meeting</legend>
+            <label for ="inputAddress">Address</label>
+            <input id="inputAddress" type="text" placeholder="Enter address for meeting">
+
+            <label for="inputSummary">Summary</label>
+            <input id="inputSummary" type="text" placeholder="Summary for created meeting">
+
+            <label for="inputDate">Date</label>
+            <input id="inputDate" type="date" placeholder="Summary for created meeting">
+            
+            <label for="inputTime">Time</label>
+            <input id="inputTime" type="time" placeholder="Summary for created meeting">
+            
+            
+        </fieldset>
+        <button>Submit</button>
+
+    </form>
+</body>
+<script>
+const inputAddress = document.getElementById("inputAddress")
+const inputSummary = document.getElementById("inputSummary")
+const inputDate = document.getElementById("inputDate");
+const inputTime = document.getElementById("inputTime");
+
+console.log(localStorage.getItem("ishgard"));
+
+document.addEventListener("submit", async event => {
+    event.preventDefault();
+    const address = inputAddress.value;
+    const summary = inputSummary.value;
+    const date = inputDate.value;
+    const time = inputTime.value;
+
+    const fullDate = new Date(date + " " + time);
+    const epochDate = fullDate.getTime()/1000.0;
+   
+    const meetings = {id:0, address, summary, time:epochDate}
+
+    const response = await fetch("http://localhost:8080/meetings", {
+        method:"POST",
+        body:JSON.stringify(meetings),
+        headers: {
+            "Content-Type":"application/json"
+        }
+    });
+    if(response.status === 201) {
+    alert("Successfully created a meeting");
+    inputAddress.value ="";
+    inputSummary.value ="";
+    inputTime.value ="";
+    inputDate.value ="";
+    
+
+} else{
+    alert("Sorry, something went wrong, please enter meeting information again");
+}
+    });
+
+
+
+</script>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <title>View Users</title>
+</head>
+<body background="https://getwallpapers.com/wallpaper/full/c/6/7/598963.jpg">
+    <nav><a href="ishgard-complaint-registration.html">Register Complaint</a></nav>
+    <nav><a href="ishgard-complaint-viewer.html">View Complaints</a>
+    <nav><a href="councilor.html">Councilor</a></nav>
+    <nav><a href="ishgardian-user-registration.html">Create Users</a></nav>
+    <h1>Ishgardian Users</h1>
+
+    <table>
+        <thead>
+            <tr><th>User_ID</th><th>Name</th><th>password</th><th>Role</th></tr>
+        </thead>
+        <tbody id="ishgardTableBody">
+        </tbody>
+    </table>
+    
+</body>
+<script>
+const ishgardTableBody = document.getElementById("ishgardTableBody");
+
+
+async function getIshgardians() {
+    const httpResponse = await fetch("http://localhost:8080/ishgardians");
+    const ishgardians = await httpResponse.json();
+    return ishgardians;
+}
+
+async function renderIshgardianTable() {
+    const testIshgardians = await getIshgardians();
+
+    for(const ishgardians of testIshgardians) {
+        const ishgardRow = document.createElement("tr");
+
+        const isghardIdData = document.createElement("td");
+        isghardIdData.innerText = ishgardians.userid
+        
+        const ishgardNameData = document.createElement("td");
+        ishgardNameData.innerText=ishgardians.name;
+
+        const ishgardPasswordData = document.createElement("td");
+        ishgardPasswordData.innerText = ishgardians.password;
+
+        const ishgardRoleData = document.createElement("td");
+        ishgardRoleData.innerText = ishgardians.role;
+
+        ishgardRow.appendChild(isghardIdData);
+        ishgardRow.appendChild(ishgardNameData);
+        ishgardRow.appendChild(ishgardPasswordData);
+        ishgardRow.appendChild(ishgardRoleData);
+
+        ishgardTableBody.appendChild(ishgardRow);
+    }
+}
+renderIshgardianTable();
+
+
+
+</script>
+</html>

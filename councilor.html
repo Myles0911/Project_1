@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <title>Assign Complaints to Meeting</title>
+    
+</head>
+
+<body background="https://getwallpapers.com/wallpaper/full/c/6/7/598963.jpg">
+    <nav> <a href="meetings-viewer.html"> View Meetings</a></nav>
+    <nav><a href="ishgard-complaint-registration.html">Register Complaint</a></nav>
+    <nav><a href="ishgard-complaint-viewer.html">View Complaints</a>
+    <nav><a href="ishgardian-viewUsers.html"> View Registered Users</a></nav>
+    <nav><a href="ishgardian-user-registration.html">View Users</a></nav>
+    <nav> <a href="meetings-creation.html">Create Meetings</a></nav>
+    
+
+    <h1>Assign Complaint to Meeting</h1>
+    <table>
+        <thead>
+            <tr><th id ="Complaint_ID">Complaint_ID</th><th>Description</th><th id ="setStatus">Status</th><th>Meeting_ID</th></tr>
+        </thead>
+        <tbody id="assignComTableBody">
+        </tbody>
+    </table>
+</body>
+
+<script>
+ const assignComTableBody = document.getElementById("assignComTableBody");
+  const id = document.getElementById("Complaint_ID")
+  const setStatus = document.getElementById("setStatus")
+async function handleButton(id, setStatus) {
+    console.log(id, setStatus);
+    const status = {status:setStatus};
+    const response = await fetch(`http://localhost:8080/complaints/${id.value}`, {
+        method:"PUT",
+        body:JSON.stringify(status),
+        headers: {
+            "Content-Type":"application/json"
+        }
+
+    })
+    if(response.status === 200){
+        location.reload();
+    }
+    
+}
+
+async function updateButton(id) {
+    const meeting_id = document.getElementById(`input_${id}`).value;
+    const httpResponse = await fetch("http://localhost:8080/meetings")
+    const meetings = await httpResponse.json();
+
+    console.log(meetings);
+    for(let meeting of meetings) {
+        if(meeting.meeting_id == meeting_id) {
+            const response = await fetch(`http://localhost:8080/complaints/${id}/${meeting_id}`, {
+            method:"PUT",
+            body:JSON.stringify(meeting_id),
+            headers: {
+            "Content-Type":"application/json"
+        }
+            });
+            console.log(response);
+            if(response.status === 200) {
+                alert("Meeting ID Updated", `Success!`);
+                location.reload();
+                return;
+            }
+        }
+    }
+}
+async function getComplaintToMeetings() {
+    const httpResponse = await fetch("http://localhost:8080/complaints");
+    const assignComplaints = await httpResponse.json();
+    return assignComplaints;
+
+    
+}
+
+async function getComplaintById() {
+        const httpResponse = await(`http://localhost:8080/complaints/${id}`);
+        const complaint = await httpResponse.json();
+        console.log(complaint);
+        return complaint;
+    }
+
+async function renderAssignComplaintsTable() {
+    const testAssignComplaints = await getComplaintToMeetings();
+    for(const assignComplaints of testAssignComplaints) {
+        const assignRow = document.createElement("tr");
+
+        const comIdData = document.createElement("td");
+        comIdData.innerText = assignComplaints.id;
+
+        const comDescriptionData = document.createElement("td");
+        comDescriptionData.innerText = assignComplaints.description;
+
+        const comStatusData = document.createElement("td");
+        comStatusData.innerText = assignComplaints.status;
+        comStatusData.setAttribute("id", "status")
+
+       
+        const comMeetingIDData = document.createElement("td");
+        comMeetingIDData.innerText = assignComplaints.meeting_id;
+
+        const comHigh = document.createElement("button")
+        comHigh.innerHTML = "HIGH"
+        if(testAssignComplaints.status === "HIGH") {
+            comHigh.disabled = true;
+        }
+       
+        comHigh.onclick=function() {
+            handleButton(this.parentNode.childNodes.innerHTML, "HIGH");
+        }
+
+        const comLow = document.createElement("button")
+        comLow.innerHTML = "LOW"
+        if(testAssignComplaints.status === "LOW") {
+            comLow.disabled = true;
+        }
+        
+        comLow.onclick = function() {
+            handleButton(this.parentNode.childNodes.innerHTML, "LOW");
+        }
+
+        const comIgnore = document.createElement("button")
+        comIgnore.innerHTML = "IGNORE"
+        if(testAssignComplaints.status === "IGNORE") {
+            comIgnore.disabled = true;
+        }
+        comIgnore.onclick = function() {
+            handleButton(this.parentNode.childNodes.innerHTML, "IGNORE");
+        }
+        
+        const complaintUpdateInput = document.createElement("input");
+        complaintUpdateInput.setAttribute("id", `input_${testAssignComplaints.id}`),
+        complaintUpdateInput.type="number";
+        complaintUpdateInput.placeholder="Enter Meeting ID Number";
+
+        const complaintUpdateBtn = document.createElement("button");
+        complaintUpdateBtn.innerHTML = "Update";
+        complaintUpdateBtn.dataset.id = testAssignComplaints.id;
+        complaintUpdateBtn.dataset.input = complaintUpdateInput;
+        complaintUpdateBtn.onclick=function() {
+            updateButton(complaintUpdateBtn.dataset.id);
+        }
+
+        assignRow.appendChild(comIdData);
+        assignRow.appendChild(comDescriptionData);
+        assignRow.appendChild(comStatusData);
+        assignRow.appendChild(comMeetingIDData);
+        assignRow.appendChild(comHigh);
+        assignRow.appendChild(comLow);
+        assignRow.appendChild(comIgnore);
+        assignRow.appendChild(complaintUpdateInput);
+        assignRow.appendChild(complaintUpdateBtn);
+
+        assignComTableBody.appendChild(assignRow);
+        
+
+       
+
+    }
+}
+renderAssignComplaintsTable();
+</script>
+
+
+</script>
+</html>

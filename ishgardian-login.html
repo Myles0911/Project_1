@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <title>Login</title>
+</head>
+<body background="https://getwallpapers.com/wallpaper/full/c/6/7/598963.jpg">
+    <h2>Login</h2>
+    <form>
+        <fieldset>
+            <legend>Login</legend>
+            <label for="nameInput">Name</label>
+            <input id="nameInput" type="text" placeholder="Enter your Name"/>
+
+            <label for="passwordInput">Password</label>
+            <input id="passwordInput" type="password"/>
+
+            <button>Login</button>
+
+        </fieldset>
+    </form>
+    
+</body>
+<script>
+    const nameInput = document.getElementById("nameInput");
+    const passwordInput = document.getElementById("passwordInput");
+
+    document.addEventListener("submit", async event => {
+        event.preventDefault();
+
+        const name = nameInput.value;
+        const password = passwordInput.value;
+        const credentials = {name, password};
+
+        const httpResponse = await fetch("http://localhost:8080/login", {
+            method:"POST",
+            body:JSON.stringify(credentials),
+            headers:{
+                'Content-Type':"application/json"
+        }
+    });
+
+
+    if(httpResponse.status === 200) {
+        const ishgard = await httpResponse.json();
+        alert("login successful");
+
+        ishgard.password = null;
+        localStorage.setItem("ishgard", JSON.stringify(ishgard));
+        localStorage.getItem("ishgard");
+        localStorage.clear();
+    }
+
+    if(httpResponse.status === 404) {
+        alert("Name not found");
+    }
+    if(httpResponse.status === 400) {
+        alert("password does not match");
+    }
+
+});
+</script>
+</html>
